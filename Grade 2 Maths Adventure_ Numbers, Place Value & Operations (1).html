@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grade 2 Maths Adventure: Numbers, Place Value &amp; Operations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* Typography and cheerful Foundation Phase styling */
+    body {
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(160deg, #e0f7fa 0%, #fffde7 48%, #f3e5f5 100%);
+      min-height: 100vh;
+      color: #1e293b;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .font-display {
+      font-family: 'Fredoka', 'Nunito', sans-serif;
+    }
+
+    /* Tactile playful button feel for 7-8 year old learners */
+    .btn-chunky {
+      transition: transform 0.14s ease, box-shadow 0.14s ease, background-color 0.2s ease;
+      box-shadow: 0 5px 0 rgba(15, 23, 42, 0.14);
+    }
+
+    .btn-chunky:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 rgba(15, 23, 42, 0.16);
+    }
+
+    .btn-chunky:active:not(:disabled) {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 rgba(15, 23, 42, 0.14);
+    }
+
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.94) translateY(8px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .animate-pop {
+      animation: popIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes gentleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .animate-float {
+      animation: gentleBounce 2.6s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-amber-200 selection:text-slate-900">
+  <!-- Main Application Container -->
+  <div id="app" class="min-h-screen flex flex-col justify-between py-4 px-3 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+
+    <!-- Top Header & Audio/Read-Aloud Controls -->
+    <header class="w-full bg-white/95 backdrop-blur border-2 border-amber-300 rounded-3xl p-3 sm:p-4 shadow-md mb-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <!-- Custom Brand Mascot SVG -->
+          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-amber-100 border-2 border-amber-400 flex items-center justify-center shrink-0 animate-float" aria-hidden="true">
+            <svg viewBox="0 0 64 64" class="w-10 h-10">
+              <circle cx="32" cy="34" r="22" fill="#facc15" stroke="#854d0e" stroke-width="3" />
+              <circle cx="24" cy="29" r="4" fill="#1e293b" />
+              <circle cx="40" cy="29" r="4" fill="#1e293b" />
+              <circle cx="25.3" cy="27.7" r="1.4" fill="#ffffff" />
+              <circle cx="41.3" cy="27.7" r="1.4" fill="#ffffff" />
+              <path d="M22 39 Q32 48 42 39" fill="none" stroke="#854d0e" stroke-width="3.2" stroke-linecap="round" />
+              <path d="M18 14 L24 6 L32 12 L40 6 L46 14 Z" fill="#38bdf8" stroke="#0369a1" stroke-width="2.5" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div class="min-w-0">
+            <p class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-sky-700">
+              CAPS Grade 2 Mathematics • Formative Practice
+            </p>
+            <h1 class="font-display text-lg sm:text-2xl font-bold text-slate-900 leading-tight truncate">
+              Grade 2 Maths Adventure
+            </h1>
+          </div>
+        </div>
+
+        <!-- Audio & Read-Aloud Toggles -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <button
+            id="toggle-audio-btn"
+            type="button"
+            onclick="toggleSoundEffects()"
+            class="btn-chunky flex items-center gap-1.5 px-3 sm:px-4 py-2.5 rounded-2xl bg-emerald-100 hover:bg-emerald-200 text-emerald-950 border-2 border-emerald-400 font-bold text-sm sm:text-base cursor-pointer"
+            aria-pressed="true"
+            title="Toggle cheerful sound effects"
+          >
+            <span id="sound-icon" aria-hidden="true">🔊</span>
+            <span id="sound-label">Sounds On</span>
+          </button>
+
+          <button
+            id="toggle-tts-btn"
+            type="button"
+            onclick="toggleReadAloud()"
+            class="btn-chunky flex items-center gap-1.5 px-3 sm:px-4 py-2.5 rounded-2xl bg-sky-100 hover:bg-sky-200 text-sky-950 border-2 border-sky-400 font-bold text-sm sm:text-base cursor-pointer"
+            aria-pressed="true"
+            title="Toggle automatic voice read-aloud"
+          >
+            <span id="tts-icon" aria-hidden="true">🗣️</span>
+            <span id="tts-label">Read Aloud</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress Bar Section (Visible during active quiz) -->
+      <div id="progress-wrapper" class="hidden mt-4 pt-3 border-t-2 border-amber-100">
+        <div class="flex items-center justify-between text-sm sm:text-base font-extrabold text-slate-700 mb-1.5">
+          <span id="progress-step-text">Question 1 of 6</span>
+          <span id="progress-score-text" class="text-amber-700">⭐ Stars: 0</span>
+        </div>
+        <div class="w-full h-4 sm:h-5 bg-slate-100 rounded-full overflow-hidden border-2 border-slate-200" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar-container">
+          <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-sky-400 via-emerald-400 to-amber-400 transition-all duration-500 rounded-full" style="width: 0%;"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dynamic Main Stage -->
+    <main id="main-stage" class="flex-1 w-full bg-white/95 backdrop-blur border-2 border-sky-200 rounded-3xl p-4 sm:p-7 shadow-lg">
+      <!-- Content injected dynamically by JavaScript -->
+    </main>
+
+    <!-- Friendly Footer -->
+    <footer class="w-full text-center text-xs sm:text-sm font-bold text-slate-600 mt-4 px-2">
+      <p>Numbers, Place Value &amp; Operations • Built for Young South African Explorers (Ages 7–8)</p>
+    </footer>
+  </div>
+
+  <script>
+    /**
+     * Application State & Configuration
+     * Designed for Grade 2 CAPS Mathematics (Numbers, Operations and Relationships).
+     * Supports:
+     *  1. Multiple Choice (with visual SVG prompts)
+     *  2. Drag-and-Drop OR Tap-to-Place / Match (tens & units / number matching)
+     *  3. Fill-in-the-Blank with interactive on-screen Number Pad + keyboard support
+     */
+    const state = {
+      screen: 'welcome', // 'welcome' | 'quiz' | 'summary'
+      currentIndex: 0,
+      score: 0,
+      answers: [], // Stores per-question result { id, topic, type, correct, attempts, userAnswer, expectedDisplay }
+      currentAttempts: 0,
+      isSolved: false,
+      soundEnabled: true,
+      readAloudEnabled: true,
+      // Question-specific interactive state
+      selectedOption: null,
+      placedItems: {}, // e.g., { tens: '30', units: '4' } or { slotA: '45', slotB: '54' }
+      activeDragValue: null,
+      selectedToken: null, // For tap-to-place accessibility on mobile/touch
+      fillInput: ''
+    };
+
+    // Web Audio API synthesizer for gentle offline sound effects (no external files)
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!state.soundEnabled) return null;
+      try {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        return audioCtx;
+      } catch (err) {
+        return null;
+      }
+    }
+
+    function playTone(freq, duration = 0.16, type = 'sine', delay = 0, gainPeak = 0.12) {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      try {
+        const now = ctx.currentTime + delay;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(gainPeak, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + duration + 0.02);
+      } catch (err) {
+        // Ignore audio errors on restricted devices
+      }
+    }
+
+    function playCorrectSound() {
+      playTone(523.25, 0.14, 'triangle', 0, 0.14);    // C5
+      playTone(659.25, 0.14, 'triangle', 0.11, 0.14); // E5
+      playTone(783.99, 0.24, 'triangle', 0.22, 0.16); // G5
+    }
+
+    function playEncouragementSound() {
+      playTone(392.00, 0.16, 'sine', 0, 0.1);
+      playTone(349.23, 0.20, 'sine', 0.14, 0.09);
+    }
+
+    function playClickSound() {
+      playTone(587.33, 0.07, 'sine', 0, 0.08);
+    }
+
+    // Safe Web Speech API wrapper with automatic fallback & error protection
+    function speakText(text) {
+      if (!state.readAloudEnabled) return;
+      if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.92; // Clear, unhurried pace for 7-8 year olds
+        utterance.pitch = 1.08;
+        utterance.lang = 'en-ZA';
+        utterance.onerror = () => {};
+        window.speechSynthesis.speak(utterance);
+      } catch (err) {
+        // Graceful fallback if speech synthesis is unavailable
+      }
+    }
+
+    function stopSpeech() {
+      try {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+        }
+      } catch (err) {}
+    }
+
+    function toggleSoundEffects() {
+      state.soundEnabled = !state.soundEnabled;
+      const btn = document.getElementById('toggle-audio-btn');
+      const icon = document.getElementById('sound-icon');
+      const label = document.getElementById('sound-label');
+      btn.setAttribute('aria-pressed', String(state.soundEnabled));
+      icon.textContent = state.soundEnabled ? '🔊' : '🔇';
+      label.textContent = state.soundEnabled ? 'Sounds On' : 'Muted';
+      if (state.soundEnabled) {
+        playClickSound();
+      }
+    }
+
+    function toggleReadAloud() {
+      state.readAloudEnabled = !state.readAloudEnabled;
+      const btn = document.getElementById('toggle-tts-btn');
+      const icon = document.getElementById('tts-icon');
+      const label = document.getElementById('tts-label');
+      btn.setAttribute('aria-pressed', String(state.readAloudEnabled));
+      icon.textContent = state.readAloudEnabled ? '🗣️' : '🤐';
+      label.textContent = state.readAloudEnabled ? 'Read Aloud' : 'Voice Off';
+      if (!state.readAloudEnabled) {
+        stopSpeech();
+      } else {
+        playClickSound();
+      }
+    }
+
+    // SVG Illustration Builders for Grade 2 Visual Support
+    const svgIllustrations = {
+      tensBlocks(tensCount, unitsCount) {
+        let tensHtml = '';
+        for (let t = 0; t < tensCount; t++) {
+          const x = 16 + t * 26;
+          tensHtml += `<rect x="${x}" y="18" width="16" height="80" rx="4" fill="#38bdf8" stroke="#0369a1" stroke-width="2" />`;
+          // Horizontal lines showing 10 unit segments
+          for (let s = 1; s < 10; s++) {
+            const ly = 18 + s * 8;
+            tensHtml += `<line x1="${x}" y1="${ly}" x2="${x + 16}" y2="${ly}" stroke="#0284c7" stroke-width="1.2" />`;
+          }
+        }
+        let unitsHtml = '';
+        const unitsStartX = 16 + tensCount * 26 + 18;
+        for (let u = 0; u < unitsCount; u++) {
+          const col = u % 2;
+          const row = Math.floor(u / 2);
+          const ux = unitsStartX + col * 20;
+          const uy = 62 + row * 20;
+          unitsHtml += `<rect x="${ux}" y="${uy}" width="15" height="15" rx="3" fill="#fbbf24" stroke="#b45309" stroke-width="2" />`;
+        }
+        const totalWidth = Math.max(220, unitsStartX + 60);
+        return `
+          <div class="flex flex-col items-center bg-sky-50/80 border-2 border-sky-200 rounded-2xl p-3">
+            <svg viewBox="0 0 ${totalWidth} 112" class="w-full max-w-xs h-28" role="img" aria-label="${tensCount} tens rods and ${unitsCount} unit blocks">
+              ${tensHtml}
+              ${unitsHtml}
+            </svg>
+            <span class="text-xs sm:text-sm font-extrabold text-sky-900 mt-1">
+              Blue bars = Tens (10s) • Gold blocks = Ones (1s)
+            </span>
+          </div>
+        `;
+      },
+
+      fruitBasket(groupA, groupB, operation = '+') {
+        const renderApples = (count, startX, colorFill, strokeColor) => {
+          let out = '';
+          for (let i = 0; i < count; i++) {
+            const col = i % 5;
+            const row = Math.floor(i / 5);
+            const cx = startX + col * 26;
+            const cy = 34 + row * 28;
+            out += `
+              <circle cx="${cx}" cy="${cy}" r="10" fill="${colorFill}" stroke="${strokeColor}" stroke-width="2" />
+              <path d="M${cx} ${cy - 10} Q${cx + 4} ${cy - 17} ${cx + 7} ${cy - 14}" fill="none" stroke="#15803d" stroke-width="2.2" stroke-linecap="round" />
+            `;
+          }
+          return out;
+        };
+
+        return `
+          <div class="flex flex-col items-center bg-amber-50/80 border-2 border-amber-200 rounded-2xl p-3">
+            <svg viewBox="0 0 340 100" class="w-full max-w-sm h-24" role="img" aria-label="${groupA} red apples and ${groupB} green apples">
+              ${renderApples(groupA, 22, '#f87171', '#b91c1c')}
+              <text x="166" y="56" font-size="28" font-weight="bold" fill="#334155" text-anchor="middle">${operation}</text>
+              ${renderApples(groupB, 192, '#4ade80', '#15803d')}
+            </svg>
+            <span class="text-xs sm:text-sm font-extrabold text-amber-900">
+              ${groupA} Red Apples ${operation} ${groupB} Green Apples
+            </span>
+          </div>
+        `;
+      },
+
+      sharingBaskets(totalItems, basketsCount) {
+        let itemsSvg = '';
+        for (let i = 0; i < totalItems; i++) {
+          const x = 32 + i * 22;
+          itemsSvg += `<circle cx="${x}" cy="24" r="8" fill="#fb923c" stroke="#c2410c" stroke-width="2" />`;
+        }
+
+        let basketsSvg = '';
+        const basketWidth = 74;
+        const gap = 22;
+        const startX = Math.max(16, (340 - (basketsCount * basketWidth + (basketsCount - 1) * gap)) / 2);
+        for (let b = 0; b < basketsCount; b++) {
+          const bx = startX + b * (basketWidth + gap);
+          basketsSvg += `
+            <path d="M${bx + 6} 62 L${bx + basketWidth - 6} 62 L${bx + basketWidth - 14} 92 L${bx + 14} 92 Z" fill="#fde68a" stroke="#92400e" stroke-width="2.5" stroke-linejoin="round" />
+            <line x1="${bx + 2}" y1="62" x2="${bx + basketWidth - 2}" y2="62" stroke="#92400e" stroke-width="3" stroke-linecap="round" />
+            <text x="${bx + basketWidth / 2}" y="82" font-size="14" font-weight="bold" fill="#78350f" text-anchor="middle">Box ${b + 1}</text>
+          `;
+        }
+
+        return `
+          <div class="flex flex-col items-center bg-orange-50/80 border-2 border-orange-200 rounded-2xl p-3">
+            <svg viewBox="0 0 340 104" class="w-full max-w-sm h-24" role="img" aria-label="${totalItems} oranges shared equally into ${basketsCount} boxes">
+              ${itemsSvg}
+              ${basketsSvg}
+            </svg>
+            <span class="text-xs sm:text-sm font-extrabold text-orange-900">
+              Share ${totalItems} oranges equally into ${basketsCount} boxes
+            </span>
+          </div>
+        `;
+      },
+
+      numberLineJump(startNum, jumpVal) {
+        const endNum = startNum + jumpVal;
+        return `
+          <div class="flex flex-col items-center bg-purple-50/80 border-2 border-purple-200 rounded-2xl p-3">
+            <svg viewBox="0 0 340 94" class="w-full max-w-sm h-24" role="img" aria-label="Number line starting at ${startNum} jumping forward by ${jumpVal}">
+              <path d="M90 54 Q170 8 250 54" fill="none" stroke="#9333ea" stroke-width="3.5" stroke-dasharray="6 4" />
+              <polygon points="250,54 239,49 243,59" fill="#9333ea" />
+              <text x="170" y="24" font-size="16" font-weight="bold" fill="#6b21a8" text-anchor="middle">+${jumpVal}</text>
+              <line x1="25" y1="62" x2="315" y2="62" stroke="#475569" stroke-width="3" stroke-linecap="round" />
+              <circle cx="90" cy="62" r="6" fill="#38bdf8" stroke="#0369a1" stroke-width="2" />
+              <text x="90" y="84" font-size="16" font-weight="bold" fill="#0f172a" text-anchor="middle">${startNum}</text>
+              <circle cx="250" cy="62" r="6" fill="#facc15" stroke="#a16207" stroke-width="2" />
+              <text x="250" y="84" font-size="16" font-weight="bold" fill="#0f172a" text-anchor="middle">?</text>
+            </svg>
+            <span class="text-xs sm:text-sm font-extrabold text-purple-900">
+              Start at ${startNum} and hop forward +${jumpVal} (lands on ${endNum})
+            </span>
+          </div>
+        `;
+      }
+    };
+
+    // 6 Curriculum-Aligned Grade 2 CAPS Mathematics Questions
+    const questions = [
+      {
+        id: 'q1',
+        capsTag: 'Place Value (Tens & Ones)',
+        type: 'multiple-choice',
+        prompt: 'Look at the blocks. Which number is shown?',
+        spokenText: 'Look at the blocks. Which number is shown? There are 3 blue ten-bars and 4 gold one-blocks.',
+        illustration: () => svgIllustrations.tensBlocks(3, 4),
+        options: ['34', '43', '304', '24'],
+        correctAnswer: '34',
+        hint: 'Count 3 tens (10, 20, 30) and then count on 4 ones: 31, 32, 33, 34!'
+      },
+      {
+        id: 'q2',
+        capsTag: 'Place Value • Drag or Tap',
+        type: 'drag-place-value',
+        prompt: 'Build the number 57! Drag or tap a Tens card and a Ones card into the boxes.',
+        spokenText: 'Build the number 57. Drag or tap a tens card and a ones card into the matching boxes.',
+        illustration: () => svgIllustrations.tensBlocks(5, 7),
+        slots: [
+          { key: 'tens', label: 'Tens Box', expected: '50' },
+          { key: 'units', label: 'Ones Box', expected: '7' }
+        ],
+        tokens: ['50', '7', '5', '70'],
+        hint: 'In 57, the 5 stands for 5 tens (50) and the 7 stands for 7 ones (7).'
+      },
+      {
+        id: 'q3',
+        capsTag: 'Addition to 99',
+        type: 'fill-blank',
+        prompt: 'Add the apples together: 26 + 13 = ?',
+        spokenText: 'Add the apples together. What is 26 plus 13?',
+        illustration: () => svgIllustrations.fruitBasket(6, 3, '+'),
+        displayEquation: '26 + 13 =',
+        expectedAnswer: '39',
+        hint: 'Add the tens: 20 + 10 = 30. Add the ones: 6 + 3 = 9. Put them together!'
+      },
+      {
+        id: 'q4',
+        capsTag: 'Number Patterns & Counting On',
+        type: 'multiple-choice',
+        prompt: 'Start at 48 and jump forward 10 on the number line. Where do you land?',
+        spokenText: 'Start at 48 and jump forward 10 on the number line. Where do you land?',
+        illustration: () => svgIllustrations.numberLineJump(48, 10),
+        options: ['58', '49', '68', '38'],
+        correctAnswer: '58',
+        hint: 'Jumping forward 10 increases the tens digit by 1 while the ones stay 8.'
+      },
+      {
+        id: 'q5',
+        capsTag: 'Grouping & Sharing',
+        type: 'fill-blank',
+        prompt: 'Share 12 oranges equally into 3 boxes. How many oranges in each box?',
+        spokenText: 'Share 12 oranges equally into 3 boxes. How many oranges go in each box?',
+        illustration: () => svgIllustrations.sharingBaskets(12, 3),
+        displayEquation: '12 ÷ 3 =',
+        expectedAnswer: '4',
+        hint: 'Give 1 orange to each of the 3 boxes over and over until all 12 oranges are shared.'
+      },
+      {
+        id: 'q6',
+        capsTag: 'Number Sense & Comparison',
+        type: 'multiple-choice',
+        prompt: 'Which number is greater than 76 but smaller than 85?',
+        spokenText: 'Which number is greater than 76 but smaller than 85?',
+        illustration: () => `
+          <div class="flex items-center justify-center gap-4 bg-emerald-50/80 border-2 border-emerald-200 rounded-2xl p-4">
+            <span class="px-4 py-2 rounded-xl bg-white border-2 border-emerald-400 font-display text-2xl font-bold text-slate-800">76</span>
+            <span class="font-display text-xl font-bold text-emerald-700">&lt; ? &lt;</span>
+            <span class="px-4 py-2 rounded-xl bg-white border-2 border-emerald-400 font-display text-2xl font-bold text-slate-800">85</span>
+          </div>
+        `,
+        options: ['81', '69', '74', '90'],
+        correctAnswer: '81',
+        hint: 'Look for a number in the 80s that comes before 85 (like 77, 78, 79, 80, 81, 82, 83, 84).'
+      }
+    ];
+
+    function startQuiz() {
+      playClickSound();
+      state.screen = 'quiz';
+      state.currentIndex = 0;
+      state.score = 0;
+      state.answers = [];
+      resetQuestionState();
+      render();
+      announceCurrentQuestion();
+    }
+
+    function resetQuestionState() {
+      state.currentAttempts = 0;
+      state.isSolved = false;
+      state.selectedOption = null;
+      state.placedItems = {};
+      state.activeDragValue = null;
+      state.selectedToken = null;
+      state.fillInput = '';
+    }
+
+    function announceCurrentQuestion() {
+      const q = questions[state.currentIndex];
+      if (q && state.readAloudEnabled) {
+        speakText(q.spokenText || q.prompt);
+      }
+    }
+
+    function replayQuestionAudio() {
+      const q = questions[state.currentIndex];
+      if (!q) return;
+      const wasEnabled = state.readAloudEnabled;
+      state.readAloudEnabled = true;
+      speakText(q.spokenText || q.prompt);
+      state.readAloudEnabled = wasEnabled;
+    }
+
+    function updateProgressHeader() {
+      const wrapper = document.getElementById('progress-wrapper');
+      if (state.screen !== 'quiz') {
+        wrapper.classList.add('hidden');
+        return;
+      }
+      wrapper.classList.remove('hidden');
+      const total = questions.length;
+      const currentNum = state.currentIndex + 1;
+      const pct = Math.round(((state.currentIndex + (state.isSolved ? 1 : 0)) / total) * 100);
+
+      document.getElementById('progress-step-text').textContent = `Question ${currentNum} of ${total}`;
+      document.getElementById('progress-score-text').textContent = `⭐ Stars: ${state.score} / ${total}`;
+      document.getElementById('progress-bar-fill').style.width = `${pct}%`;
+      document.getElementById('progress-bar-container').setAttribute('aria-valuenow', String(pct));
+    }
+
+    // Render Dispatcher
+    function render() {
+      updateProgressHeader();
+      const stage = document.getElementById('main-stage');
+      stage.classList.remove('animate-pop');
+      void stage.offsetWidth; // Trigger reflow for smooth transition
+      stage.classList.add('animate-pop');
+
+      if (state.screen === 'welcome') {
+        renderWelcome(stage);
+      } else if (state.screen === 'quiz') {
+        renderQuestion(stage);
+      } else if (state.screen === 'summary') {
+        renderSummary(stage);
+      }
+    }
+
+    function renderWelcome(container) {
+      stopSpeech();
+      container.innerHTML = `
+        <div class="text-center max-w-2xl mx-auto py-2 sm:py-4">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 border-2 border-amber-300 text-amber-900 font-extrabold text-sm mb-4">
+            <span>🌟</span>
+            <span>6 Fun Interactive Challenges</span>
+          </div>
+
+          <h2 class="font-display text-2xl sm:text-4xl font-bold text-slate-900 mb-3">
+            Ready for Your Maths Adventure?
+          </h2>
+          <p class="text-base sm:text-lg font-semibold text-slate-700 mb-6 leading-relaxed">
+            Explore <strong>Numbers</strong>, <strong>Tens &amp; Ones (Place Value)</strong>, and <strong>Addition &amp; Sharing</strong>.
+            Tap big buttons, drag or tap place-value cards, and use the number pad!
+          </p>
+
+          <!-- Topic Badges -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left mb-7">
+            <div class="p-4 rounded-2xl bg-sky-50 border-2 border-sky-200">
+              <div class="text-2xl mb-1">🧱</div>
+              <div class="font-display font-bold text-sky-950 text-base">Place Value</div>
+              <p class="text-sm font-semibold text-sky-800">Build numbers with tens and ones.</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-amber-50 border-2 border-amber-200">
+              <div class="text-2xl mb-1">🍎</div>
+              <div class="font-display font-bold text-amber-950 text-base">Addition &amp; Counting</div>
+              <p class="text-sm font-semibold text-amber-800">Add groups and hop along number lines.</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-emerald-50 border-2 border-emerald-200">
+              <div class="text-2xl mb-1">🍊</div>
+              <div class="font-display font-bold text-emerald-950 text-base">Equal Sharing</div>
+              <p class="text-sm font-semibold text-emerald-800">Share treats fairly into boxes.</p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onclick="startQuiz()"
+            class="btn-chunky w-full sm:w-auto px-9 py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-display text-xl sm:text-2xl font-bold border-2 border-emerald-700 cursor-pointer"
+          >
+            Start Adventure 🚀
+          </button>
+        </div>
+      `;
+    }
+
+    function renderQuestion(container) {
+      const q = questions[state.currentIndex];
+      if (!q) return;
+
+      let interactiveBody = '';
+      if (q.type === 'multiple-choice') {
+        interactiveBody = renderMultipleChoice(q);
+      } else if (q.type === 'drag-place-value') {
+        interactiveBody = renderDragPlaceValue(q);
+      } else if (q.type === 'fill-blank') {
+        interactiveBody = renderFillBlank(q);
+      }
+
+      container.innerHTML = `
+        <div class="space-y-5">
+          <!-- Topic Badge & Listen Button -->
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="inline-block px-3.5 py-1 rounded-full bg-indigo-100 border border-indigo-300 text-indigo-900 font-extrabold text-xs sm:text-sm">
+              ${q.capsTag}
+            </span>
+            <button
+              type="button"
+              onclick="replayQuestionAudio()"
+              class="btn-chunky inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 border-2 border-amber-300 font-extrabold text-xs sm:text-sm cursor-pointer"
+            >
+              <span aria-hidden="true">🔈</span>
+              <span>Hear Question</span>
+            </button>
+          </div>
+
+          <!-- Question Prompt -->
+          <h2 class="font-display text-xl sm:text-3xl font-bold text-slate-900 leading-snug">
+            ${q.prompt}
+          </h2>
+
+          <!-- Visual SVG Illustration -->
+          ${q.illustration ? q.illustration() : ''}
+
+          <!-- Interactive Answer Area -->
+          <div id="question-interactive-area">
+            ${interactiveBody}
+          </div>
+
+          <!-- Supportive Feedback Banner -->
+          <div id="feedback-banner" class="hidden rounded-2xl p-4 border-2 text-base sm:text-lg font-bold" role="status" aria-live="polite"></div>
+
+          <!-- Action Controls -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <button
+              id="check-btn"
+              type="button"
+              onclick="handleCheckAnswer()"
+              ${state.isSolved ? 'disabled' : ''}
+              class="btn-chunky flex-1 sm:flex-initial px-7 py-3.5 rounded-2xl bg-sky-500 hover:bg-sky-600 disabled:opacity-45 disabled:cursor-not-allowed text-white font-display text-lg sm:text-xl font-bold border-2 border-sky-700 cursor-pointer"
+            >
+              Check My Answer ✓
+            </button>
+
+            <button
+              id="next-btn"
+              type="button"
+              onclick="handleNextQuestion()"
+              class="${state.isSolved ? 'inline-flex' : 'hidden'} btn-chunky flex-1 sm:flex-initial items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-display text-lg sm:text-xl font-bold border-2 border-emerald-700 cursor-pointer"
+            >
+              <span>${state.currentIndex === questions.length - 1 ? 'See My Stars 🌟' : 'Next Question →'}</span>
+            </button>
+          </div>
+        </div>
+      `;
+
+      // Restore feedback banner if already answered/solved
+      if (state.isSolved) {
+        const existing = state.answers.find(a => a.id === q.id);
+        if (existing) {
+          showFeedback(
+            existing.correct,
+            existing.correct
+              ? `Awesome job! ${existing.userAnswer} is right!`
+              : `Good try! The answer is ${existing.expectedDisplay}. ${q.hint}`
+          );
+        }
+      }
+    }
+
+    // 1. Multiple Choice Renderer
+    function renderMultipleChoice(q) {
+      return `
+        <div class="grid grid-cols-2 gap-3 sm:gap-4" role="radiogroup" aria-label="${q.prompt}">
+          ${q.options.map((opt, idx) => {
+            const isSelected = state.selectedOption === opt;
+            const isCorrectOpt = state.isSolved && opt === q.correctAnswer;
+            const isWrongSelected = state.isSolved && isSelected && opt !== q.correctAnswer;
+
+            let classes = 'bg-white hover:bg-sky-50 text-slate-900 border-slate-300';
+            if (isCorrectOpt) {
+              classes = 'bg-emerald-100 text-emerald-950 border-emerald-500 ring-4 ring-emerald-200';
+            } else if (isWrongSelected) {
+              classes = 'bg-rose-100 text-rose-950 border-rose-400';
+            } else if (isSelected) {
+              classes = 'bg-amber-100 text-amber-950 border-amber-500 ring-4 ring-amber-200';
+            }
+
+            const letters = ['A', 'B', 'C', 'D'];
+            return `
+              <button
+                type="button"
+                role="radio"
+                aria-checked="${isSelected}"
+                ${state.isSolved ? 'disabled' : ''}
+                onclick="selectMultipleChoice('${opt}')"
+                class="btn-chunky min-h-[72px] sm:min-h-[84px] p-4 rounded-2xl border-2 font-display text-2xl sm:text-3xl font-bold flex items-center justify-center gap-3 cursor-pointer disabled:cursor-default ${classes}"
+              >
+                <span class="w-8 h-8 rounded-full bg-slate-100 border border-slate-300 text-slate-600 text-sm font-extrabold flex items-center justify-center">
+                  ${letters[idx] || ''}
+                </span>
+                <span>${opt}</span>
+              </button>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function selectMultipleChoice(value) {
+      if (state.isSolved) return;
+      playClickSound();
+      state.selectedOption = value;
+      renderQuestion(document.getElementById('main-stage'));
+    }
+
+    // 2. Drag-and-Drop OR Tap-to-Place Renderer
+    function renderDragPlaceValue(q) {
+      const tensPlaced = state.placedItems.tens || '';
+      const unitsPlaced = state.placedItems.units || '';
+
+      return `
+        <div class="space-y-4">
+          <!-- Target Drop/Tap Zones -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            ${q.slots.map(slot => {
+              const placedVal = state.placedItems[slot.key];
+              const hasToken = Boolean(placedVal);
+              return `
+                <div
+                  data-slot="${slot.key}"
+                  ondragover="handleSlotDragOver(event)"
+                  ondrop="handleSlotDrop(event, '${slot.key}')"
+                  onclick="handleSlotTap('${slot.key}')"
+                  role="button"
+                  tabindex="0"
+                  onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();handleSlotTap('${slot.key}');}"
+                  class="min-h-[104px] rounded-2xl border-3 border-dashed ${hasToken ? 'border-sky-500 bg-sky-50' : 'border-amber-400 bg-amber-50/60 hover:bg-amber-100/70'} p-4 flex flex-col items-center justify-center transition cursor-pointer select-none"
+                >
+                  <span class="text-xs sm:text-sm font-extrabold uppercase tracking-wide text-slate-600 mb-1">
+                    ${slot.label}
+                  </span>
+                  ${hasToken
+                    ? `<span class="font-display text-3xl font-bold text-sky-900 px-4 py-1 rounded-xl bg-white border-2 border-sky-400 shadow-sm">${placedVal}</span>
+                       <span class="text-xs font-bold text-slate-500 mt-1">Tap to clear</span>`
+                    : `<span class="text-sm sm:text-base font-bold text-amber-800">Drop or Tap a card here</span>`
+                  }
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <!-- Live Combined Number Preview -->
+          <div class="text-center text-base sm:text-lg font-extrabold text-slate-700 bg-slate-50 border border-slate-200 rounded-2xl py-2.5 px-4">
+            Your Number:
+            <span class="font-display text-2xl text-indigo-700 ml-1">
+              ${(tensPlaced || unitsPlaced) ? `${tensPlaced || '__'} + ${unitsPlaced || '__'}` : '? + ?'}
+            </span>
+          </div>
+
+          <!-- Draggable / Tappable Number Cards -->
+          <div>
+            <p class="text-sm font-extrabold text-slate-600 mb-2 text-center sm:text-left">
+              Number Cards (Drag or Tap a card, then tap a box):
+            </p>
+            <div class="grid grid-cols-4 gap-2.5 sm:gap-3">
+              ${q.tokens.map(token => {
+                const isSelected = state.selectedToken === token;
+                return `
+                  <button
+                    type="button"
+                    draggable="${!state.isSolved}"
+                    ${state.isSolved ? 'disabled' : ''}
+                    ondragstart="handleTokenDragStart(event, '${token}')"
+                    onclick="handleTokenTap('${token}')"
+                    class="btn-chunky py-3.5 px-2 rounded-2xl border-2 font-display text-xl sm:text-2xl font-bold cursor-grab active:cursor-grabbing ${
+                      isSelected
+                        ? 'bg-amber-300 border-amber-600 text-slate-950 ring-4 ring-amber-200'
+                        : 'bg-white hover:bg-amber-50 border-amber-400 text-slate-900'
+                    }"
+                  >
+                    ${token}
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function handleTokenDragStart(event, token) {
+      if (state.isSolved) return;
+      state.activeDragValue = token;
+      state.selectedToken = token;
+      try {
+        event.dataTransfer.setData('text/plain', token);
+        event.dataTransfer.effectAllowed = 'move';
+      } catch (err) {}
+    }
+
+    function handleSlotDragOver(event) {
+      if (state.isSolved) return;
+      event.preventDefault();
+      try {
+        event.dataTransfer.dropEffect = 'move';
+      } catch (err) {}
+    }
+
+    function handleSlotDrop(event, slotKey) {
+      if (state.isSolved) return;
+      event.preventDefault();
+      let droppedVal = state.activeDragValue;
+      try {
+        const dtVal = event.dataTransfer.getData('text/plain');
+        if (dtVal) droppedVal = dtVal;
+      } catch (err) {}
+
+      if (droppedVal) {
+        playClickSound();
+        state.placedItems[slotKey] = droppedVal;
+        state.activeDragValue = null;
+        state.selectedToken = null;
+        renderQuestion(document.getElementById('main-stage'));
+      }
+    }
+
+    function handleTokenTap(token) {
+      if (state.isSolved) return;
+      playClickSound();
+      state.selectedToken = state.selectedToken === token ? null : token;
+      renderQuestion(document.getElementById('main-stage'));
+    }
+
+    function handleSlotTap(slotKey) {
+      if (state.isSolved) return;
+      playClickSound();
+      if (state.selectedToken) {
+        state.placedItems[slotKey] = state.selectedToken;
+        state.selectedToken = null;
+      } else if (state.placedItems[slotKey]) {
+        delete state.placedItems[slotKey];
+      }
+      renderQuestion(document.getElementById('main-stage'));
+    }
+
+    // 3. Fill-in-the-Blank + Number Pad Renderer
+    function renderFillBlank(q) {
+      const digits = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+      return `
+        <div class="space-y-4">
+          <div class="flex flex-wrap items-center justify-center gap-3 bg-slate-50 border-2 border-slate-200 rounded-2xl p-4">
+            <span class="font-display text-2xl sm:text-4xl font-bold text-slate-800">
+              ${q.displayEquation || ''}
+            </span>
+            <div
+              aria-label="Your answer"
+              class="min-w-[110px] min-h-[58px] px-4 py-2 rounded-2xl bg-white border-3 border-sky-400 font-display text-2xl sm:text-4xl font-bold text-sky-900 flex items-center justify-center"
+            >
+              ${state.fillInput || '<span class="text-slate-300">?</span>'}
+            </div>
+          </div>
+
+          <!-- Large Tap-Friendly Number Pad -->
+          <div class="max-w-sm mx-auto">
+            <div class="grid grid-cols-5 gap-2 sm:gap-2.5">
+              ${digits.map(d => `
+                <button
+                  type="button"
+                  ${state.isSolved ? 'disabled' : ''}
+                  onclick="appendNumberPad('${d}')"
+                  class="btn-chunky py-3 rounded-2xl bg-white hover:bg-sky-50 disabled:opacity-45 border-2 border-slate-300 font-display text-xl sm:text-2xl font-bold text-slate-900 cursor-pointer"
+                >
+                  ${d}
+                </button>
+              `).join('')}
+            </div>
+            <div class="flex gap-2.5 mt-2.5">
+              <button
+                type="button"
+                ${state.isSolved ? 'disabled' : ''}
+                onclick="backspaceNumberPad()"
+                class="btn-chunky flex-1 py-2.5 rounded-2xl bg-amber-100 hover:bg-amber-200 disabled:opacity-45 border-2 border-amber-300 font-extrabold text-sm sm:text-base text-amber-950 cursor-pointer"
+              >
+                ⌫ Delete
+              </button>
+              <button
+                type="button"
+                ${state.isSolved ? 'disabled' : ''}
+                onclick="clearNumberPad()"
+                class="btn-chunky flex-1 py-2.5 rounded-2xl bg-rose-100 hover:bg-rose-200 disabled:opacity-45 border-2 border-rose-300 font-extrabold text-sm sm:text-base text-rose-950 cursor-pointer"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function appendNumberPad(digit) {
+      if (state.isSolved || state.fillInput.length >= 4) return;
+      playClickSound();
+      state.fillInput += digit;
+      renderQuestion(document.getElementById('main-stage'));
+    }
+
+    function backspaceNumberPad() {
+      if (state.isSolved || !state.fillInput) return;
+      playClickSound();
+      state.fillInput = state.fillInput.slice(0, -1);
+      renderQuestion(document.getElementById('main-stage'));
+    }
+
+    function clearNumberPad() {
+      if (state.isSolved || !state.fillInput) return;
+      playClickSound();
+      state.fillInput = '';
+      renderQuestion(document.getElementById('main-stage'));
+    }
+
+    // Physical keyboard support for desktop testing
+    document.addEventListener('keydown', (event) => {
+      if (state.screen !== 'quiz' || state.isSolved) return;
+      const q = questions[state.currentIndex];
+      if (!q) return;
+
+      if (q.type === 'fill-blank') {
+        if (/^[0-9]$/.test(event.key)) {
+          appendNumberPad(event.key);
+        } else if (event.key === 'Backspace') {
+          event.preventDefault();
+          backspaceNumberPad();
+        } else if (event.key === 'Enter') {
+          event.preventDefault();
+          handleCheckAnswer();
+        }
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        handleCheckAnswer();
+      }
+    });
+
+    // Answer Evaluation & Supportive Formative Feedback
+    function handleCheckAnswer() {
+      if (state.isSolved) return;
+      const q = questions[state.currentIndex];
+      if (!q) return;
+
+      let hasAttempt = false;
+      let isCorrect = false;
+      let userAnswerDisplay = '';
+      let expectedDisplay = '';
+
+      if (q.type === 'multiple-choice') {
+        if (!state.selectedOption) {
+          showFeedback(false, 'Tap one of the answer cards first!', false);
+          return;
+        }
+        hasAttempt = true;
+        userAnswerDisplay = state.selectedOption;
+        expectedDisplay = q.correctAnswer;
+        isCorrect = state.selectedOption === q.correctAnswer;
+      } else if (q.type === 'drag-place-value') {
+        const tens = state.placedItems.tens;
+        const units = state.placedItems.units;
+        if (!tens || !units) {
+          showFeedback(false, 'Place a number card in both the Tens Box and Ones Box!', false);
+          return;
+        }
+        hasAttempt = true;
+        userAnswerDisplay = `${tens} + ${units}`;
+        expectedDisplay = '50 + 7 (57)';
+        isCorrect = tens === '50' && units === '7';
+      } else if (q.type === 'fill-blank') {
+        if (!state.fillInput.trim()) {
+          showFeedback(false, 'Tap a number on the pad to type your answer!', false);
+          return;
+        }
+        hasAttempt = true;
+        userAnswerDisplay = state.fillInput.trim();
+        expectedDisplay = q.expectedAnswer;
+        isCorrect = state.fillInput.trim() === q.expectedAnswer;
+      }
+
+      if (!hasAttempt) return;
+
+      state.currentAttempts += 1;
+
+      if (isCorrect) {
+        state.isSolved = true;
+        const earnedStar = state.currentAttempts === 1 ? 1 : 0;
+        if (earnedStar > 0) {
+          state.score += 1;
+        }
+        state.answers.push({
+          id: q.id,
+          topic: q.capsTag,
+          type: q.type,
+          correct: true,
+          attempts: state.currentAttempts,
+          userAnswer: userAnswerDisplay,
+          expectedDisplay
+        });
+        playCorrectSound();
+        updateProgressHeader();
+        renderQuestion(document.getElementById('main-stage'));
+        const msg = state.currentAttempts === 1
+          ? `Superstar! ${userAnswerDisplay} is correct! You earned a star!`
+          : `Well done! ${userAnswerDisplay} is right!`;
+        showFeedback(true, msg, true);
+      } else {
+        playEncouragementSound();
+        if (state.currentAttempts < 2) {
+          // Allow a gentle second try with a helpful hint
+          showFeedback(false, `Almost! Try one more time. Hint: ${q.hint}`, true);
+        } else {
+          // Reveal answer supportively and move forward
+          state.isSolved = true;
+          state.answers.push({
+            id: q.id,
+            topic: q.capsTag,
+            type: q.type,
+            correct: false,
+            attempts: state.currentAttempts,
+            userAnswer: userAnswerDisplay,
+            expectedDisplay
+          });
+          updateProgressHeader();
+          renderQuestion(document.getElementById('main-stage'));
+          showFeedback(false, `Good effort! The answer is ${expectedDisplay}. ${q.hint}`, true);
+        }
+      }
+    }
+
+    function showFeedback(isPositive, message, speakIt = false) {
+      const banner = document.getElementById('feedback-banner');
+      if (!banner) return;
+      banner.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-400', 'text-emerald-950', 'bg-amber-50', 'border-amber-400', 'text-amber-950');
+      if (isPositive) {
+        banner.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-950');
+        banner.innerHTML = `<div class="flex items-start gap-2.5"><span class="text-2xl" aria-hidden="true">🎉</span><span>${message}</span></div>`;
+      } else {
+        banner.classList.add('bg-amber-50', 'border-amber-400', 'text-amber-950');
+        banner.innerHTML = `<div class="flex items-start gap-2.5"><span class="text-2xl" aria-hidden="true">💡</span><span>${message}</span></div>`;
+      }
+      if (speakIt && state.readAloudEnabled) {
+        speakText(message);
+      }
+    }
+
+    function handleNextQuestion() {
+      playClickSound();
+      if (state.currentIndex + 1 < questions.length) {
+        state.currentIndex += 1;
+        resetQuestionState();
+        render();
+        announceCurrentQuestion();
+      } else {
+        state.screen = 'summary';
+        render();
+      }
+    }
+
+    function renderSummary(container) {
+      stopSpeech();
+      const total = questions.length;
+      const pct = Math.round((state.score / total) * 100);
+
+      let headline = 'Keep Exploring & Practising!';
+      let encouragingText = 'Every puzzle helps your maths brain grow stronger. Try again anytime to collect more stars!';
+      let badgeEmoji = '🌱';
+
+      if (state.score === total) {
+        headline = 'Maths Champion! All Stars Collected!';
+        encouragingText = 'What a fantastic job! You nailed your Grade 2 numbers, place value, and operations!';
+        badgeEmoji = '🏆';
+      } else if (pct >= 60) {
+        headline = 'Great Maths Adventure!';
+        encouragingText = 'You did really well working through the challenges and building strong number skills!';
+        badgeEmoji = '🌟';
+      }
+
+      if (state.readAloudEnabled) {
+        speakText(`${headline} You earned ${state.score} out of ${total} stars. ${encouragingText}`);
+      }
+
+      container.innerHTML = `
+        <div class="text-center max-w-2xl mx-auto py-2">
+          <div class="text-5xl sm:text-6xl mb-2 animate-float" aria-hidden="true">${badgeEmoji}</div>
+          <h2 class="font-display text-2xl sm:text-4xl font-bold text-slate-900 mb-2">
+            ${headline}
+          </h2>
+          <p class="text-base sm:text-lg font-semibold text-slate-700 mb-5">
+            ${encouragingText}
+          </p>
+
+          <!-- Score Card -->
+          <div class="inline-flex flex-col sm:flex-row items-center gap-3 sm:gap-6 px-6 py-4 rounded-3xl bg-amber-50 border-2 border-amber-300 mb-6">
+            <div>
+              <div class="text-xs font-extrabold uppercase tracking-wider text-amber-800">First-Try Stars</div>
+              <div class="font-display text-3xl sm:text-4xl font-bold text-amber-950">⭐ ${state.score} / ${total}</div>
+            </div>
+            <div class="h-10 w-px bg-amber-200 hidden sm:block"></div>
+            <div>
+              <div class="text-xs font-extrabold uppercase tracking-wider text-amber-800">Star Score</div>
+              <div class="font-display text-3xl sm:text-4xl font-bold text-emerald-700">${pct}%</div>
+            </div>
+          </div>
+
+          <!-- Topic Checklist -->
+          <div class="text-left space-y-2.5 mb-7">
+            <h3 class="font-display text-lg font-bold text-slate-800">How You Did on Each Skill:</h3>
+            ${questions.map(q => {
+              const record = state.answers.find(a => a.id === q.id);
+              const passed = record ? record.correct : false;
+              return `
+                <div class="flex items-center justify-between gap-3 p-3 rounded-2xl border ${passed ? 'bg-emerald-50/70 border-emerald-200' : 'bg-sky-50/70 border-sky-200'}">
+                  <div class="font-bold text-sm sm:text-base text-slate-800">
+                    ${q.capsTag}
+                  </div>
+                  <span class="px-3 py-1 rounded-full text-xs sm:text-sm font-extrabold ${passed ? 'bg-emerald-200 text-emerald-950' : 'bg-sky-200 text-sky-950'}">
+                    ${passed ? '⭐ Star Earned' : '📘 Practised'}
+                  </span>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <button
+            type="button"
+            onclick="startQuiz()"
+            class="btn-chunky w-full sm:w-auto px-9 py-4 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-display text-xl sm:text-2xl font-bold border-2 border-sky-700 cursor-pointer"
+          >
+            Play Again 🔄
+          </button>
+        </div>
+      `;
+    }
+
+    // Initial Render
+    window.addEventListener('DOMContentLoaded', () => {
+      render();
+    });
+  </script>
+</body>
+</html>
